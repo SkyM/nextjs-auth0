@@ -61,7 +61,11 @@ export default function backchannelLogoutHandlerFactory(
         sub && store.set(`sub|${clientID}|${sub}`, payload)
       ]);
     } catch (e) {
-      throw new BackchannelLogoutError('application_error', e.message);
+      if (e instanceof Error) {
+        throw new BackchannelLogoutError('invalid_request', e.message);
+      } else {
+        throw new BackchannelLogoutError('invalid_request', 'An unknown error occurred');
+      }
     }
     res.send204();
   };
