@@ -34,7 +34,11 @@ export default function backchannelLogoutHandlerFactory(
     try {
       token = await verifyLogoutToken(logoutToken, config, await client.getIssuerMetadata());
     } catch (e) {
-      throw new BackchannelLogoutError('invalid_request', e.message);
+      if (e instanceof Error) {
+        throw new BackchannelLogoutError('invalid_request', e.message);
+      } else {
+        throw new BackchannelLogoutError('invalid_request', 'An unknown error occurred');
+      }
     }
     const {
       clientID,
